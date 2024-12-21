@@ -4,6 +4,7 @@ const sessionSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true,
+        unique:true
     },
     creator:{
         type:mongoose.Schema.Types.ObjectId,
