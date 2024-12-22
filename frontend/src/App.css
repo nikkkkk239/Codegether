@@ -1,0 +1,182 @@
+/* #7272FF - dark */
+/* #9F9FFF - light */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'montserrat';
+}
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 55px;
+}
+.navbar .logo{
+    font-size: 30px;
+    font-weight: 500;
+    color: #7272FF;
+}
+@media (max-width: 600px) {
+    .navbar .logo{
+        font-size: 25px;
+        font-weight: 500;
+        color: #7272FF;
+    }
+}
+.navbar .right{
+    display: flex;
+    gap: 20px;
+
+
+}
+.navbar .right div{
+    display: flex;
+    gap: 8px;
+    font-size: 17px;
+    padding: 1px 6px;
+    transition: all 0.3s ease-in-out;
+    border-bottom: 1px solid #7272FF;
+    border-radius: 5px;
+    align-items: center;
+    color: #7272FF;
+}
+.navbar .right div .icon{
+    font-size: 22px;
+}
+
+.navbar .right div:hover{
+    background-color: #7272FF;
+    color: white;
+    cursor: pointer;
+}
+.register{
+    height: 89.2vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.register .left{
+    width: 50%;
+
+    height: 55vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+.register .left .logo{
+    font-size: 45px;
+    border: 5px solid #7272FF;
+    display: flex;
+    align-items: center;
+    padding: 5px ;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    animation-name: float;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: backwards;
+    animation-play-state: running;
+    animation-direction: alternate;
+    background-color: #9F9FFF;
+}
+@keyframes float {
+    from {
+        transform: translateY(-10px);
+    }to{
+        transform: translateY(0);
+    }
+}
+.register .left form{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+}
+.register .left form .inputField{
+    background-color: #c4c4fb;
+    border: 3px solid #7272FF;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 5px;
+
+}
+.register .left form input{
+    border: none;
+    width: 100%;
+    font-size: 18px;
+    background-color: #c4c4fb;
+}
+.register .left form input::placeholder{
+    color: black;
+}
+.register .left form input:focus{
+    outline: none;
+}
+.register .left form .inputField .icon{
+    cursor: pointer;
+    font-size: 20px;
+}
+.register .left form button{
+    padding: 2px 0px;
+    border: none;
+    
+    border: 2px solid #7272FF;
+
+    font-size: 17px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 5px;
+}
+.register .left form button:hover{
+    background-color: #c4c4fb;
+}
+.register .left .written .nav{
+    text-decoration: none;
+    color: #7272FF;
+    font-size: 18px;
+}
+.register .right{
+    width: 50%;
+    border-left: 2px solid #7272FF;
+    display: flex;
+    flex-direction: column;
+    height: 55vh;
+    align-items: center;
+    gap: 10px;
+}
+.register .right .image{
+    width: 60%;
+    height: 80%;
+    background-color: #c4c4fb;
+    border-radius: 20%;
+    padding: 25px;
+}
+.register .right .image img{
+    width: 100%;
+    height: 100%;
+    border-radius: 20%;
+    object-fit: cover;
+}
+.register .right .written{
+    font-size: 18px;
+    color: #7272FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+@media (max-width : 950px) {
+    .register .right {
+        display: none;
+    }
+    .register .left{
+        width: 100%;
+    }
+}
