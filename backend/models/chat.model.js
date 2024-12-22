@@ -4,6 +4,7 @@ const chatSchema = new mongoose.Schema({
     sessionId:{
         type : mongoose.Schema.Types.ObjectId,
         ref : "sessions",
+        required:true
     },
     messages:[
         {
@@ -16,7 +17,7 @@ const chatSchema = new mongoose.Schema({
             },
             time:{
                 type: Date, 
-                default: Date.now, 
+                default: new Date(), 
             },
         }
     ]

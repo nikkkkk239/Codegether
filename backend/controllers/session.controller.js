@@ -1,3 +1,4 @@
+import Chat from "../models/chat.model.js";
 import Session from "../models/session.model.js"
 import bcrypt from "bcrypt"
 export const getAllSessions = async(req,res)=>{
@@ -9,7 +10,6 @@ export const getAllSessions = async(req,res)=>{
         return res.status(500).json({message:"Internal server error . "})
     }
 }
-///use select in auth
 export const createSession = async(req,res)=>{
     const {name,password,language} = req.body;
     const creatorId = req.user._id;
@@ -32,7 +32,10 @@ export const createSession = async(req,res)=>{
             name,
             language,
         });
-        return res.status(201).json(session);
+        const chat = await Chat.create({
+            sessionId:session._id
+        })
+        return res.status(201).json({session,chat});
     } catch (error) {
         console.log("Error in createSession : ",error)
         return res.status(500).json({message:"Internal server error."})
@@ -42,20 +45,60 @@ export const joinSession = async(req,res)=>{
     const {id : sessionId} = req.params;
     const {password} = req.body;
     const userId = req.user._id;
-
     try {
         const session = await Session.findById(sessionId);
         if(!session){
             res.status(404).json({message:"Session not found ."});
         }
-        //want to update session participant list.
+        
         const isCorrectPassword = await bcrypt.compare(password,session.password);
         if(!isCorrectPassword) {
             return res.status(400).json({message:"Incorrect password ."})
         }
-        return res.status(200).json(session)
+        const updatedSession = await Session.findByIdAndUpdate(
+            sessionId,
+            { 
+                $addToSet: { participants: userId }, 
+                $set: { new: true }                 
+            },
+            { new: true } 
+        );
+        const chat = await Chat.findOne({sessionId:sessionId})
+
+        if (!updatedSession) {
+            return res.status(400).json({ message: "Failed to update the session." });
+        }
+        return res.status(200).json({session:updatedSession,chat})
     } catch (error) {
-        console.log("Error in getSessiondetails : ",error)
+        console.log("Error in joinSession : ",error)
         return res.status(500).json({message:"Internal server error ."})
     }
 }
+export const changeCode = async(req,res)=>{
+    const {id : sessionId} = req.params;
+    const {code } = req.body;
+    const userId = req.user._id;
+
+    try {
+        const session = await Session.findById(sessionId);
+        if(!session){
+            return res.status(400).json({message:"Session doesn't found."})
+        }
+        const updatedSession = await Session.findByIdAndUpdate(
+            sessionId,
+            {
+                $set:{code:code},
+    
+            },{new:true}
+        )
+        if(!updatedSession){
+            return res.status(400).json({message:"Session doesn't updated ."})
+        }
+        return res.status(200).json(updatedSession);
+    } catch (error) {
+        console.log("Error in changeCode controller : ",error);
+        return res.status(500).json({message:"Internal server error ."})
+    }
+
+}
+

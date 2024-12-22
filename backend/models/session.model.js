@@ -22,7 +22,7 @@ const sessionSchema = new mongoose.Schema({
     participants :[{
         type:mongoose.Schema.Types.ObjectId,
         ref:"users"
-    }],default:[],
+    }],
     password:{
         type:String,
         minlength:6,

@@ -24,7 +24,7 @@ export const login = async (req,res)=>{
     }
 }
 export const register = async(req,res)=>{
-    const {username,email,password,profilePic} = req.body;
+    let {username,email,password,profilePic} = req.body;
     //add default profile pic...;
     if(!profilePic){
         profilePic = "";
