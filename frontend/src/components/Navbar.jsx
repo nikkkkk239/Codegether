@@ -1,26 +1,52 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useAuthStore } from '../store/useAuthstore.js';
-// import { FaLaptopCode } from "react-icons/fa";
-// import { TbWorldCode } from "react-icons/tb";
+
+import Modal from "react-modal"
+import { TbWorldCode } from "react-icons/tb";
 import { RiUser6Fill } from "react-icons/ri";
 import { RiLogoutCircleRFill } from "react-icons/ri";
+import { useNavigate } from 'react-router-dom';
+import { modalContext } from '../store/ModalContext.jsx';
 
 
 function Navbar() {
-  const {authUser} = useAuthStore();
+  const {setIsModalOpen,setModalType} = useContext(modalContext)
+  const navigate = useNavigate();
+  const {authUser,logout} = useAuthStore();
+
+  const handleLogout = ()=>{
+    logout();
+  }
+  const handleProfileClick = ()=>{
+    navigate('/profile')
+  }
+  const openModal = () => {
+    setIsModalOpen(true);
+    setModalType("host")
+  };
+
+  
   return (
     <div className='navbar'>
-      <div className="logo">CodeGether</div>
+      <div className="logo" style={authUser && {cursor:"pointer"}} onClick={()=> authUser && navigate('/')} >CodeGether</div>
       <div className='right'>
         {
           authUser && 
-          <div className='profile'>
-            <RiUser6Fill className='icon'/>
+          <div className='Host' onClick={openModal}>
+            <TbWorldCode className='icon' />
+            Host
+          </div>
+        }
+         
+        {
+          authUser && 
+          <div className='profile' onClick={handleProfileClick}>
+            <RiUser6Fill className='icon' />
             Profile
           </div>
-         } 
+        } 
         {authUser && 
-        <div className='logout'>
+        <div className='logout' onClick={handleLogout}>
           <RiLogoutCircleRFill className='icon'/>
           Logout
           </div>

@@ -7,6 +7,7 @@
     box-sizing: border-box;
     font-family: 'montserrat';
 }
+
 .navbar{
     display: flex;
     justify-content: space-between;
@@ -84,6 +85,9 @@
     animation-direction: alternate;
     background-color: #9F9FFF;
 }
+.register .left .logo:hover{
+    box-shadow: 1px 3px 3px 3px #c4c4fb;
+}
 @keyframes float {
     from {
         transform: translateY(-10px);
@@ -105,6 +109,7 @@
     display: flex;
     width: 100%;
     align-items: center;
+
     gap: 5px;
 
 }
@@ -179,4 +184,134 @@
     .register .left{
         width: 100%;
     }
+}
+.home{
+    background-color: #c4c4fb;
+    padding: 40px;
+    min-height: calc(100vh - 87.5px);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    
+}
+.home .session{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: space-between;
+    background-color: white;
+    height: 150px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    width: 25%;
+    transition: all 0.4s ease-in-out;
+
+}
+.home .session:hover{
+    box-shadow:1px 4px 5px 4px #7272FF ; 
+}
+.home .session .header{
+    display: flex;
+    flex-direction: column;
+
+}
+.home .session .header .title{
+    font-size: 25px;
+}
+.home .session .header .createdBy{
+    font-size: 15px;
+}
+.home .session .header .createdBy span{
+    color: #7272FF;
+    font-weight: 500;
+    font-size: 16px;
+}
+.home .session .footer{
+    display: flex;
+    justify-content: space-between;
+    
+    gap: 10px;
+    font-size: 16px;
+    align-items: center;
+}
+.home .session .footer button{
+    border: none;
+    background-color: #c4c4fb;
+    padding: 6px 10px;
+    font-size: 17px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+
+}
+.home .session .footer button:hover{
+    background-color: #7272FF;
+    color: white;
+}
+.home .session .footer .right{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.home .session .footer .icon{
+    color: #7272FF;
+    font-size: 18px;
+}
+.hostModal{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+
+
+}
+.hostModal .title{
+    font-size: 30px;
+    font-weight: 450;
+}
+.hostModal .lower{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.hostModal .lower .inputFields{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+.hostModal .lower .inputFields .inputs{
+    display: flex;
+    background-color: #c4c4fb;
+    border: 2px solid black;
+    padding: 5px 8px;
+    justify-content: space-between;
+    gap: 5px;
+    font-size: 17px;
+}
+.hostModal .lower .inputFields .inputs .icon{
+    cursor: pointer;
+}
+.hostModal .lower .inputFields input{
+    border: none;
+    background-color: #c4c4fb;
+    width: 100%;
+    font-size: 17px;
+}
+.hostModal .lower .inputFields input::placeholder{
+    color: black;
+}
+.hostModal .lower .inputFields input:focus{
+    outline: none;
+}
+.hostModal .lower button{
+    padding: 8px;
+    cursor: pointer;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    border: 1px solid black;
+}
+.hostModal .lower button:hover{
+    background-color: #9F9FFF;
 }

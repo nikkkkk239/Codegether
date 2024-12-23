@@ -12,7 +12,7 @@ export const getAllSessions = async(req,res)=>{
 }
 export const createSession = async(req,res)=>{
     const {name,password,language} = req.body;
-    const creatorId = req.user._id;
+    const creator = req.user;
     try {
         if(!name || !password || !language){
             return res.status(400).json({message:"Incomplete data provided ."})
@@ -27,7 +27,8 @@ export const createSession = async(req,res)=>{
         const salt = await bcrypt.genSalt(10);
         const hashedPass = await bcrypt.hash(password,salt);
         const session = await Session.create({
-            creator:creatorId,
+            creator:creator._id,
+            hostName:creator.username,
             password:hashedPass,
             name,
             language,

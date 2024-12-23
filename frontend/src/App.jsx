@@ -10,7 +10,7 @@ import './App.css'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import SessionPage from './pages/SessionPage.jsx'
-import { useAuthStore } from './store/useAuthstore.js'
+import { useAuthStore } from './store/useAuthStore.js'
 function App() {
   const {checkAuth,authUser} = useAuthStore();
 

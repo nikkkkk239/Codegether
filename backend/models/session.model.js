@@ -11,6 +11,10 @@ const sessionSchema = new mongoose.Schema({
         ref:"users",
         required:true,
     },
+    hostName:{
+        type:String,
+        required:true,
+    },
     language:{
         type:String,
         required:true,
