@@ -5,15 +5,27 @@ import SessionCard from '../components/SessionCard';
 import { modalContext } from '../store/ModalContext';
 import HostModal from "../components/HostModal"
 import JoinModal from "../components/JoinModal"
+import { useAuthStore } from '../store/useAuthStore';
+
 
 function Home() {
-  const {getSessions,sessions,isFetchingSessions} = useSessionStore();
+  const {getSessions,sessions,isFetchingSessions,setSelectedSession,setSessionClicked,setChat,listenToSession,unListenToSession} = useSessionStore();
+  const {socket} = useAuthStore()
   const {isModalOpen,setIsModalOpen,modalType} = useContext(modalContext)
 
   useEffect(()=>{
     getSessions();
-  },[getSessions])
+    console.log("home page.")
+    listenToSession();
+    setSelectedSession(null);
+    setChat(null)
+    setSessionClicked(null)
+    return ()=>unListenToSession()
+  },[getSessions,listenToSession,unListenToSession])
 
+
+
+  const customHeight = (modalType == "host") ? "100px" : "300px"
 
   const customStyles = {
     content: {
@@ -21,8 +33,8 @@ function Home() {
       left: '50%',
       right: 'auto',
       bottom: 'auto',
-      width:"45%",
-      minHeight:"300px",
+      width:"30%",
+      minHeight:"50px",
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
       backgroundColor:"#c4c4fb"

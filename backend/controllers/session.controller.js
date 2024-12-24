@@ -1,6 +1,7 @@
 import Chat from "../models/chat.model.js";
 import Session from "../models/session.model.js"
 import bcrypt from "bcrypt"
+import { io , userSocketMap} from "../lib/socket.js";
 export const getAllSessions = async(req,res)=>{
     try {
         const allSessions = await Session.find({});
@@ -36,6 +37,12 @@ export const createSession = async(req,res)=>{
         const chat = await Chat.create({
             sessionId:session._id
         })
+        for (const userId in userSocketMap) {
+            if(userId != creator._id){
+                io.to(userSocketMap[userId]).emit("newSession",{session,chat})
+                console.log(`Emitted newSession event to user: ${userId}`);
+            }
+        }
         return res.status(201).json({session,chat});
     } catch (error) {
         console.log("Error in createSession : ",error)

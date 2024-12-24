@@ -1,20 +1,21 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { modalContext } from '../store/ModalContext'
 import { LuEye,LuEyeClosed } from 'react-icons/lu';
 import {useNavigate} from "react-router-dom"
 import toast from 'react-hot-toast';
+import { RxCross2 } from "react-icons/rx";
 import { useSessionStore } from '../store/useSessionStore';
 
 function HostModal() {
     const navigate = useNavigate()
-    const {setIsModalOpen,isModalOpen,setModalType,modalType} = useContext(modalContext);
+    const {setIsModalOpen,setModalType} = useContext(modalContext);
     const [showPassword,setShowPassword] = useState(false);
     const [language,setLanguage] = useState("javascript")
     const [password,setPassword] = useState("")
     const [name,setName] = useState("")
-    const {createSession ,selectedSession, isSessionCreating} = useSessionStore();
+    const {createSession ,selectedSession, isSessionCreating,setSelectedSession,setChat} = useSessionStore();
 
-    const handleClick = ()=>{
+    const handleClick = async ()=>{
       if(name.length == 0){
         toast.error("Name is required .")
         return;
@@ -30,13 +31,26 @@ function HostModal() {
         toast.error("Language is required .")
         return;
       }
-      createSession({name,password,language})
+      const obj = await createSession({name,password,language})
       setIsModalOpen(false)
       setModalType("")
-      navigate(`/session/${selectedSession._id}`)
+      setSelectedSession(obj.session);
+      setChat(obj.chat);
+      
+    }
+    useEffect(()=>{
+      if(selectedSession){
+        console.log("selected session : ",selectedSession);
+        navigate(`/session/${selectedSession?._id}`)
+      }
+    },[selectedSession])
+    const handleClose = () =>{
+      setIsModalOpen(false);
+      setModalType("")
     }
   return (
     <div className='hostModal'>
+      <div className='cross' onClick={handleClose}><RxCross2/></div>
       <div className='title'>Create an session</div>
       <div className='lower'>
         <div className='inputFields'>

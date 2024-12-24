@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { LuEye } from "react-icons/lu";
 import {NavLink} from "react-router-dom"
 import toast from 'react-hot-toast';
@@ -13,6 +13,9 @@ function Login() {
   const [password , setPassword] = useState("");
   const [showPassword , setShowPassword] = useState(false);
 
+  useEffect(()=>{
+    console.log("Login page.")
+  },[])
   function validateEmail(email) {
     const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return regex.test(email);

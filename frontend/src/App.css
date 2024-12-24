@@ -187,12 +187,11 @@
 }
 .home{
     background-color: #c4c4fb;
-    padding: 40px;
+    padding: 40px 80px;
     min-height: calc(100vh - 87.5px);
     display: flex;
-    gap: 20px;
+    gap: 25px;
     flex-wrap: wrap;
-    
 }
 .home .session{
     display: flex;
@@ -200,10 +199,10 @@
     gap: 20px;
     justify-content: space-between;
     background-color: white;
-    height: 150px;
+    height: 180px;
     padding: 15px 20px;
     border-radius: 8px;
-    width: 25%;
+    width: 300px;
     transition: all 0.4s ease-in-out;
 
 }
@@ -261,8 +260,15 @@
     display: flex;
     flex-direction: column;
     gap: 30px;
-
-
+    position: relative;
+}
+.hostModal .cross{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 23px;
+    cursor: pointer;
+    
 }
 .hostModal .title{
     font-size: 30px;
@@ -315,3 +321,83 @@
 .hostModal .lower button:hover{
     background-color: #9F9FFF;
 }
+.joinModal{
+    display: flex;
+    gap: 24px;
+    flex-direction: column;
+    position: relative;
+    
+}
+.joinModal .cross{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    font-size: 23px;
+    cursor: pointer;
+    
+}
+.joinModal .title{
+    font-size: 25px;
+
+}
+.joinModal .bottom{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.joinModal .bottom .inputField{
+    display: flex;
+    border: 2px solid black;
+    padding: 5px 10px;
+    gap: 5px;
+    width: 100%;
+    align-items: center;
+    background-color: #7272FF;
+    font-size: 18px;
+}
+.joinModal .bottom .inputField .icon{
+    cursor: pointer;
+}
+.joinModal .bottom .inputField input{
+    border: none;
+    background-color: #7272FF;
+    width: 100%;
+    font-size: 17.5px;
+}
+.joinModal .bottom .inputField input::placeholder{
+    color: black;
+}
+.joinModal .bottom .inputField input:focus{
+    outline: none;
+}
+.joinModal .bottom button{
+    padding: 5px;
+    font-size: 16.5px;
+    cursor: pointer;
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid black;
+
+}
+.joinModal .bottom button:hover{
+    background-color: #9F9FFF;
+    font-weight: 500;
+}
+
+/*session*/
+.sessionPage{
+    display: flex;
+    background-color: #c4c4fb;
+    height: 100vh;
+
+
+}
+.sessionPage .editor{
+    width: 70%;
+}
+.sessionPage .sidebar{
+    width: 30%;
+    border-left: 2px solid black;
+
+}
+
