@@ -65,19 +65,43 @@ export const useAuthStore = create((set,get)=>({
             },100)
         }
     },
-    connectSocket : async()=>{
-        const {authUser} = get();
-        if(!authUser || get().socket?.connected) return ;
-        const socket = io("http://localhost:3001",{
-            query:{userId : authUser._id}
-        })
-        console.log('socket form connectSocket',socket);
-        socket.connect();
-        set({socket : socket});
-        socket?.on("getOnlineUsers",(data)=>{
-            set({onlineUsers : data});
-        })
+    connectSocket: async () => {
+        const { authUser, socket } = get();
+    
+        // Avoid reconnecting if user is not authenticated or socket is already connected
+        if (!authUser || socket?.connected) return;
+    
+        // Clean up existing socket before creating a new one
+        if (socket) {
+            socket.disconnect();
+        }
+    
+        // Initialize the socket connection
+        const newSocket = io("http://localhost:3001", {
+            query: { userId: authUser._id },
+        });
+    
+        // Set the new socket in the store
+        set({ socket: newSocket });
+    
+        // Listen for events
+        newSocket.on("connect", () => {
+            console.log("Socket connected: ", newSocket.connected);
+        });
+    
+        newSocket.on("getOnlineUsers", (data) => {
+            console.log("Received online users: ", data);
+            set({ onlineUsers: data });
+        });
+    
+        newSocket.on("connect_error", (err) => {
+            console.error("Socket connection error: ", err);
+        });
+        newSocket.on("disconnect", () => {
+            console.log("Socket disconnected.");
+        });
     },
+    
     disconnectSocket : ()=>{
         if(get().socket?.connected) get().socket?.disconnect()
     }

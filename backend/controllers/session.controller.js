@@ -40,7 +40,7 @@ export const createSession = async(req,res)=>{
         for (const userId in userSocketMap) {
             if(userId != creator._id){
                 io.to(userSocketMap[userId]).emit("newSession",{session,chat})
-                console.log(`Emitted newSession event to user: ${userId}`);
+                console.log(`Emitted newSession event to user: ${userId} , socketId ; ${userSocketMap[userId]}`);
             }
         }
         return res.status(201).json({session,chat});
