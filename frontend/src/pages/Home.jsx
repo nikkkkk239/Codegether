@@ -9,7 +9,7 @@ import { useAuthStore } from '../store/useAuthStore';
 
 
 function Home() {
-  const {getSessions,sessions,isFetchingSessions,setSelectedSession,setSessionClicked,setChat,listenToSession,unListenToSession} = useSessionStore();
+  const {getSessions,sessions,isFetchingSessions,setSelectedSession,setSessionClicked,setChat,listenToSession,unListenToSession,listenToJoin,listenToSessionEnd,listenToSessionLeft} = useSessionStore();
   const {socket} = useAuthStore()
   const {isModalOpen,setIsModalOpen,modalType} = useContext(modalContext)
 
@@ -17,11 +17,14 @@ function Home() {
     getSessions();
     console.log("home page.")
     listenToSession();
+    listenToJoin();
+    listenToSessionEnd();
+    listenToSessionLeft();
     setSelectedSession(null);
     setChat(null)
     setSessionClicked(null)
     return ()=>unListenToSession()
-  },[getSessions,listenToSession,unListenToSession])
+  },[getSessions,listenToSessionLeft,listenToSession,listenToSessionEnd,unListenToSession])
 
 
 

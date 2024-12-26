@@ -10,17 +10,27 @@ export const useAuthStore = create((set,get)=>({
     isCheckingAuth : false,
     onlineUsers : [],
     socket:null,
+    isSocketConnected : false,
     checkAuth:async()=>{
         try {
             set({isCheckingAuth : true})
             const response = await axiosInstance.get("/auth/checkAuth");
             console.log("checkAuth response : ",response.data);
             set({authUser:response.data})
+            get().connectSocket()
         } catch (error) {
             console.log('Error in checkAuth : ',error)
             set({authUser:null})
         }finally{
             set({isCheckingAuth : false})
+        }
+    },
+    getUser :async (id)=>{
+        try {
+            const response = await axiosInstance.get(`/auth/getUser/${id}`)
+            return response.data;
+        } catch (error) {
+            console.log('Error in register : ',error)
         }
     },
     register:async(details)=>{
@@ -41,7 +51,6 @@ export const useAuthStore = create((set,get)=>({
     logout:async()=>{
         try {
             const response = await axiosInstance.post("/auth/logout");
-            
             set({authUser : null});
             get().disconnectSocket();
         } catch (error) {
@@ -74,11 +83,15 @@ export const useAuthStore = create((set,get)=>({
         // Clean up existing socket before creating a new one
         if (socket) {
             socket.disconnect();
+            socket.removeAllListeners(); // Remove previous listeners to prevent duplication
         }
     
         // Initialize the socket connection
         const newSocket = io("http://localhost:3001", {
             query: { userId: authUser._id },
+            reconnection: true, // Enable automatic reconnection
+            reconnectionAttempts: 5, // Set a max number of attempts
+            reconnectionDelay: 1000, // Delay between attempts
         });
     
         // Set the new socket in the store
@@ -86,23 +99,31 @@ export const useAuthStore = create((set,get)=>({
     
         // Listen for events
         newSocket.on("connect", () => {
-            console.log("Socket connected: ", newSocket.connected);
+            console.log("Socket connected: ", newSocket.id);
+            set({ isSocketConnected: true }); // Update state to reflect connection
         });
     
         newSocket.on("getOnlineUsers", (data) => {
             console.log("Received online users: ", data);
-            set({ onlineUsers: data });
+            set({ onlineUsers: data }); // Update the list of online users
         });
     
         newSocket.on("connect_error", (err) => {
-            console.error("Socket connection error: ", err);
+            console.error("Socket connection error: ", err.message);
         });
+    
         newSocket.on("disconnect", () => {
             console.log("Socket disconnected.");
+            set({ isSocketConnected: false }); // Update state to reflect disconnection
         });
     },
     
     disconnectSocket : ()=>{
-        if(get().socket?.connected) get().socket?.disconnect()
+        if(get().socket?.connected) {
+            get().socket?.disconnect()
+            socket.removeAllListeners();
+            set({ isSocketConnected: false })
+
+        }
     }
 }))

@@ -397,7 +397,151 @@
 }
 .sessionPage .sidebar{
     width: 30%;
-    border-left: 2px solid black;
+    border-left: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 30px;
 
 }
+.sessionPage .sidebar .written{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 
+}
+.sessionPage .sidebar .written .title{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+}
+.sessionPage .sidebar .written .texts{
+    display: flex;
+    justify-content: space-between;
+}
+.sessionPage .sidebar .written .texts div{
+    background-color: #9F9FFF;
+    padding: 5px 10px;
+    border: 1px solid white;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 15px;
+}
+.sessionPage .sidebar .written .title p{
+    font-size: 25px;
+    font-weight: 450;
+    text-decoration: underline;
+}
+.sessionPage .sidebar .written .title button{
+    padding: 5px 8px;
+    cursor: pointer;
+    background-color: white;
+    
+    border: 2px solid black;
+    border-radius: 3px;
+}
+.sessionPage .sidebar .written .title button:hover{
+    background-color: #7272FF;
+    font-weight: 500;
+}
+.sessionPage .sidebar .written .title .creator{
+    font-size: 15px;
+}
+.sessionPage .sidebar .chatSection{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    height: 700px;
+    position: relative;
+}
+
+.sessionPage .sidebar .chatSection .chatHeader{
+    background-color: #c4c4fb;
+    color: black;
+    text-align: center;
+    padding: 5px;
+    font-size: 17px;
+    border-bottom: 1px solid black;
+}
+
+.sessionPage .sidebar .chatSection .chatFooter{
+    display: flex;
+}
+.sessionPage .sidebar .chatSection .chatFooter input{
+    flex-grow: 1;
+    padding: 5px 10px;
+    font-size: 16.5px;
+    border: none;
+    border-top: 1px solid black;
+
+    background-color: #9F9FFF;
+}
+.sessionPage .sidebar .chatSection .chatFooter input:focus{
+    outline: none;
+}
+.sessionPage .sidebar .chatSection .chatFooter input::placeholder{
+    color: black;
+}
+.sessionPage .sidebar .chatSection .chatFooter button{
+    padding: 10px 14px;
+    border-radius: 0;
+    border: none;
+    background-color: #c4c4fb;
+    cursor: pointer;
+    transition: all 0.4s ease-in-out;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+}
+.sessionPage .sidebar .chatSection .chatFooter button:hover{
+    background-color: #9F9FFF;
+}
+.sessionPage .sidebar .chatSection .chatBody{
+    height: 90%;
+    background-color: white;
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    padding:  10px ;
+    overflow-y: scroll;
+    
+
+}
+.sessionPage .sidebar .chatSection .chatBody .message{
+    display: flex;
+    gap: 10px;
+    height: fit-content;
+    padding: 3px 5px;
+    border-radius: 5px;
+    align-items: end;
+    justify-content: space-between;
+    border: 1px solid #7272FF;
+    width: fit-content;
+    max-width: 100%;
+    flex-wrap: wrap;
+    
+}
+.sessionPage .sidebar .chatSection .chatBody .message .written{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    word-wrap: break-word;   /* Ensure long words break */
+    white-space: normal;
+    max-width: 80%;
+}
+
+.sessionPage .sidebar .chatSection .chatBody .message .written .senderName{
+    font-size: 17.5px;
+    font-weight: 500;
+    color: #7272FF;
+}
+.sessionPage .sidebar .chatSection .chatBody .message .written .text{
+    
+}
+.sessionPage .sidebar .chatSection .chatBody .message .date{
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.455);
+}

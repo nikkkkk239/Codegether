@@ -56,9 +56,9 @@ export const useSessionStore = create(
         try {
             set({isSessionJoining : true})
             const response = await axiosInstance.post(`/session/${details.id}`,data);
-            set({selectedSession : get().sessionClicked})
+            set({selectedSession : response.data.session})
             set({chat : response.data.chat})
-            toast.success("Session joined successfully.")
+
         } catch (error) {
             console.log("error in requestJoin : ",error);
             toast.error(error.response.data.message);
@@ -71,11 +71,17 @@ export const useSessionStore = create(
         const socket = useAuthStore.getState().socket;
         const onlineUsers = useAuthStore.getState().onlineUsers;
         const authUser = useAuthStore.getState().authUser;
-
+        console.log("Enter the listeToSession.")
+        socket?.off("newSession");
         socket?.on("newSession",(data)=>{
-            if(onlineUsers.includes[authUser._id]){
-                set({sessions : [...get().sessions,data.session]})
-                set({chat : data.chat})
+            console.log("Entered newSession .");
+            console.log("online users : ",onlineUsers);
+            if(onlineUsers.includes(authUser._id)){
+                console.log("newSession Emitted .")
+                set({sessions : [...get().sessions , data.session]})
+                if(!get().selectedSession){
+                    toast.success(`${data.session.hostName} started a session .`)
+                }
             }
         })
 
@@ -83,6 +89,150 @@ export const useSessionStore = create(
     unListenToSession : ()=>{
         const socket = useAuthStore.getState().socket;
         socket?.off("newSession");
+    },
+    listenToJoin : ()=>{
+        const socket = useAuthStore.getState().socket;
+        const onlineUsers = useAuthStore.getState().onlineUsers;
+        const authUser = useAuthStore.getState().authUser;
+        console.log("Enter the listenToJoin.")
+        socket?.off("userJoinedSession");
+        socket?.on("userJoinedSession",(data)=>{
+            console.log("Entered userJoinedSession .")
+            if(onlineUsers.includes(authUser._id)){
+                console.log("userJoinedSession Emitted .")
+                if(authUser._id == data.session.creator || data.session.participants.includes(authUser._id)){
+                    set({selectedSession : data.session})
+                    toast.success(`${data.user.username} joined session .`)
+                }
+                else{
+                    set({sessions : get().sessions.map((ses)=>{
+                        if(data.session._id == ses._id){
+                            return {...ses,participants:[...ses.participants,data.user._id]}
+                        }
+                        return ses;
+                    })})
+                }
+            }
+        })
+    },
+    endSession : async(id)=>{
+        try {
+            const response = await axiosInstance.delete(`/session/endSession/${id}`)
+        } catch (error) {
+            console.log("error in endSession : ",error);
+            toast.error(error.response.data.message);
+        }
+    },
+    listenToSessionEnd : ()=>{
+        const socket = useAuthStore.getState().socket;
+        const onlineUsers = useAuthStore.getState().onlineUsers;
+        const authUser = useAuthStore.getState().authUser;
+        console.log("Enter the listenToSessionEnd.")
+        socket?.off("sessionEnded");
+        socket?.on("sessionEnded",(data)=>{
+            console.log("Entered sessionEnded .")
+
+            if(onlineUsers.includes(authUser._id)){
+                console.log("sessionEnded Emitted .")
+                if(authUser._id == data.creator){
+                    toast.success("Session Ended .");
+                    set({selectedSession : null})
+                    set({sessions : get().sessions.filter((ses)=>{
+                        return ses._id != data.sessionId;
+                    })})
+                }
+                else if(data.participants.includes(authUser._id)){
+                    toast.success("Session Ended .");
+                    set({selectedSession : null});
+                    set({sessions : get().sessions.filter((ses)=>{
+                        return ses._id != data.sessionId;
+                    })});
+                }
+                else{
+                    set({sessions : get().sessions.filter((ses)=>{
+                        return ses._id != data.sessionId;
+                    })});
+                }
+            }
+        })
+    },
+    leaveSession : async(id,userid)=>{
+        try {
+            const response = await axiosInstance.post(`/session/leaveSession/${id}`,{userId: userid})
+            toast.success("Session left .")
+        } catch (error) {
+            console.log("error in leaveSession : ",error);
+            toast.error(error.response.data.message);
+        }
+    },
+    listenToSessionLeft : ()=>{
+        const socket = useAuthStore.getState().socket;
+        const onlineUsers = useAuthStore.getState().onlineUsers;
+        const authUser = useAuthStore.getState().authUser;
+        console.log("Enter the listenToSessionLeft.")
+        socket?.off("userLeftSession");
+        socket?.on("userLeftSession",(data)=>{
+            console.log("Entered userLeftSession .")
+
+            if(onlineUsers.includes(authUser._id)){
+                console.log("userLeftSession Emitted .")
+                console.log(data);
+                if(authUser._id == data.user._id){
+                    console.log("U left and event reached .")
+                    set({selectedSession : null})
+                }
+                else if(authUser._id == data.session.creator || data.session.participants.includes(authUser._id)){
+                    toast.success( `${data.user.username} left the session.`);
+                    set({selectedSession : 
+                        {...get().selectedSession,
+                            participants : get().selectedSession.participants.filter((par)=>{
+                                return par != data.user._id;
+                    })}})
+                }
+                else{
+                    set({sessions : get().sessions.map((ses)=>{
+                        if(ses._id == data.session._id){
+                            return {...ses,participants : ses.participants.filter((par)=>{
+                                return par != data.user._id;
+                            })}
+                        }
+                        return ses;
+                    })});
+                }
+            }
+        })
+    },
+    sendMessage : async(text)=>{
+        try {
+            if(!get().chat){
+                toast.error("No chat bhai shaeb.")
+                return;
+            }
+            const response = await axiosInstance.post(`/chat/${get().chat._id}`,{text});
+            set({chat : {
+                ...get().chat,
+                messages:[
+                    ...get().chat.messages,response.data.newMessage
+                ]
+            }})
+        } catch (error) {
+            console.log(error.response.data.message)
+            toast.error(error.response.data.message)
+        }
+    },
+    listenToMessages : ()=>{
+        const socket = useAuthStore.getState().socket;
+        const onlineUsers = useAuthStore.getState().onlineUsers;
+        const authUser = useAuthStore.getState().authUser;
+
+        socket?.off("newMessage");
+        socket?.on("newMessage",(data)=>{
+            if(onlineUsers.includes(authUser._id) && authUser._id != data.newMessage.senderId){
+                if(data.session.participants.includes(authUser._id) || data.session.creator == authUser._id){
+                    set({chat : {...get().chat,messages:[...get().chat.messages,data.newMessage]}})
+                }
+            }
+        })
     }
 }),{
     name: 'session-storage', // Key for localStorage
