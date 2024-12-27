@@ -24,9 +24,7 @@ function HostModal() {
         toast.error("Password is required .")
         return;
       }
-      if(password.length < 6){
-        toast.error("Password must be at least of length 6.")
-      }
+      
       if(language.length == 0){
         toast.error("Language is required .")
         return;

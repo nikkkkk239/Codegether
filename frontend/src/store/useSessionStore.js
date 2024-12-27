@@ -9,6 +9,10 @@ export const useSessionStore = create(
     setSessionClicked :(ses)=>{
         set({sessionClicked : ses})
     },
+    code:"",
+    setCode:(val)=>{
+        set({code : val})
+    },
     isFetchingSessions : false,
     isSessionCreating : false,
     isSessionJoining : false,
@@ -41,6 +45,7 @@ export const useSessionStore = create(
             console.log("Data after creating session : ",response.data);
             
             set({sessions:[...get().sessions , response.data.session]})
+            
             toast.success("Session created Successfull .")
             set({isSessionCreating : false})
             return response.data;
@@ -51,6 +56,17 @@ export const useSessionStore = create(
             set({isSessionCreating : false})
         }
     },
+    changeCode:async(code)=>{
+        try {
+            console.log("Code from changeCode :",code)
+            const response = await axiosInstance.post(`/session/changeCode/${get().selectedSession._id}`,{code});
+            set({selectedSession : response.data})
+            set({code:code})
+        } catch (error) {
+            console.log("error in changeCode : ",error);
+            toast.error(error.response.data.message);
+        }
+    },
     joinSession : async(details)=>{
         const data = {password:details.password}
         try {
@@ -58,6 +74,7 @@ export const useSessionStore = create(
             const response = await axiosInstance.post(`/session/${details.id}`,data);
             set({selectedSession : response.data.session})
             set({chat : response.data.chat})
+            set({code : response.data.session.code})
 
         } catch (error) {
             console.log("error in requestJoin : ",error);
@@ -118,6 +135,7 @@ export const useSessionStore = create(
     endSession : async(id)=>{
         try {
             const response = await axiosInstance.delete(`/session/endSession/${id}`)
+            set({code : ""})
         } catch (error) {
             console.log("error in endSession : ",error);
             toast.error(error.response.data.message);
@@ -137,12 +155,15 @@ export const useSessionStore = create(
                 if(authUser._id == data.creator){
                     toast.success("Session Ended .");
                     set({selectedSession : null})
+                    set({code : ""})
+
                     set({sessions : get().sessions.filter((ses)=>{
                         return ses._id != data.sessionId;
                     })})
                 }
                 else if(data.participants.includes(authUser._id)){
                     toast.success("Session Ended .");
+                    set({code : ""})
                     set({selectedSession : null});
                     set({sessions : get().sessions.filter((ses)=>{
                         return ses._id != data.sessionId;
@@ -159,6 +180,7 @@ export const useSessionStore = create(
     leaveSession : async(id,userid)=>{
         try {
             const response = await axiosInstance.post(`/session/leaveSession/${id}`,{userId: userid})
+            set({code : ""})
             toast.success("Session left .")
         } catch (error) {
             console.log("error in leaveSession : ",error);
@@ -233,6 +255,53 @@ export const useSessionStore = create(
                 }
             }
         })
+    },
+    listenCodeChange : ()=>{
+        const socket = useAuthStore.getState().socket;
+        const onlineUsers = useAuthStore.getState().onlineUsers;
+        const authUser = useAuthStore.getState().authUser;
+
+        socket?.off("changeCode");
+        socket?.on("changeCode",(data)=>{
+            if(authUser._id != data.whoChanged){
+                if(data.updatedSession.participants.includes(authUser._id) || data.updatedSession.creator == authUser._id){
+                    console.log("listened changeCode : ",data.updatedSession.code)
+                    set({selectedSession : data.updatedSession})
+                    set({code:data.updatedSession.code})
+                }
+            }
+        })
+    },
+    isRunning:false,
+    onRun : async(requestData)=>{
+        set({isRunning : true});
+        try {
+            const response = await fetch("https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-RapidAPI-Key": "1fb8a08e94msh7b578b47fdde6b4p11a927jsncebc456b3acf", 
+                  "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+                },
+                body: JSON.stringify(requestData),
+              })
+            const result = await response.json();
+
+            if(result.stdout){
+                return result.stdout;
+            }else if(result.stderr){
+                return `Error : ${result.stderr}`;
+            }else if (result.compile_output) {
+                return `Compilation Error: ${result.compile_output}`;
+            } else {
+                return "Unknown Error";
+            }
+        } catch (error) {
+            console.log("Error in onRun func : ",error);
+            return "Unknow error";
+        }finally{
+            set({isRunning : false})
+        }
     }
 }),{
     name: 'session-storage', // Key for localStorage

@@ -537,6 +537,7 @@
     font-size: 17.5px;
     font-weight: 500;
     color: #7272FF;
+
 }
 .sessionPage .sidebar .chatSection .chatBody .message .written .text{
     
@@ -544,4 +545,29 @@
 .sessionPage .sidebar .chatSection .chatBody .message .date{
     font-size: 15px;
     color: rgba(0, 0, 0, 0.455);
+}
+
+.editor button:hover{
+    background-color: white;
+    color: #7272FF;
+}
+.output{
+    padding: 15px;
+    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.output .title{
+    display: flex;
+    justify-content: space-between;
+
+}
+.output .title p{
+    font-size: 17px;
+    font-weight: 500;
+}
+.output .title .cross{
+    font-size: 19px;
+    cursor: pointer;
 }

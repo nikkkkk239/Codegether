@@ -95,7 +95,7 @@ export const joinSession = async(req,res)=>{
 export const changeCode = async(req,res)=>{
     const {id : sessionId} = req.params;
     const {code } = req.body;
-    const userId = req.user._id;
+    const yeahId = req.user._id;
 
     try {
         const session = await Session.findById(sessionId);
@@ -112,7 +112,14 @@ export const changeCode = async(req,res)=>{
         if(!updatedSession){
             return res.status(400).json({message:"Session doesn't updated ."})
         }
+        for(const userId in userSocketMap ){
+            if(updatedSession.participants.includes(userId) || updatedSession.creator == userId){
+                io.to(getSocketId(userId)).emit("changeCode",{updatedSession,whoChanged : yeahId})
+                console.log(`Emitted changeCode event to user: ${userId} , socketId ; ${getSocketId(userId)}`);
+            }
+        }
         return res.status(200).json(updatedSession);
+        
     } catch (error) {
         console.log("Error in changeCode controller : ",error);
         return res.status(500).json({message:"Internal server error ."})

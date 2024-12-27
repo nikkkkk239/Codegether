@@ -4,6 +4,7 @@ import {useSessionStore} from "../store/useSessionStore"
 import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message";
 import { BsSendFill } from "react-icons/bs";
+import MyEditor from "../components/MyEditor";
 
 const SessionPage = () => {
   const {id} = useParams();
@@ -17,6 +18,7 @@ const SessionPage = () => {
   }
 
   const handleEnd =async (id)=>{
+    setSelectedSession(null);
     await endSession(id)
   }
   const handleLeave =async (id)=>{
@@ -30,7 +32,6 @@ const SessionPage = () => {
     }
   }
 
-
   useEffect(()=>{
     listenToJoin();
     listenToSessionEnd();
@@ -42,7 +43,7 @@ const SessionPage = () => {
   return (
     <div className="sessionPage">
       <div className="editor">
-        Hi
+        <MyEditor/>
       </div>
       <div className="sidebar">
         <div className="written">
