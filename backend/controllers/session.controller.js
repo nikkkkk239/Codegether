@@ -55,6 +55,9 @@ export const joinSession = async(req,res)=>{
     const {password} = req.body;
     const userId = req.user._id;
     try {
+        if(!password){
+            return res.status(400).json({message :"Password is required."})
+        }
         const session = await Session.findById(sessionId);
         if(!session){
             res.status(404).json({message:"Session not found ."});

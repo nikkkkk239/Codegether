@@ -34,7 +34,7 @@ function Navbar() {
           authUser && 
           <div className='Host' onClick={openModal}>
             <TbWorldCode className='icon' />
-            Host
+            <p>Host</p>
           </div>
         }
          
@@ -42,13 +42,13 @@ function Navbar() {
           authUser && 
           <div className='profile' onClick={handleProfileClick}>
             <RiUser6Fill className='icon' />
-            Profile
+            <p>Profile</p>
           </div>
         } 
         {authUser && 
         <div className='logout' onClick={handleLogout}>
           <RiLogoutCircleRFill className='icon'/>
-          Logout
+          <p>Logout</p>
           </div>
         } 
       </div>

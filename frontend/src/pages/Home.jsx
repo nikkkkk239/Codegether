@@ -36,7 +36,7 @@ function Home() {
       left: '50%',
       right: 'auto',
       bottom: 'auto',
-      width:"30%",
+      width:"360px",
       minHeight:"50px",
       marginRight: '-50%',
       transform: 'translate(-50%, -50%)',
