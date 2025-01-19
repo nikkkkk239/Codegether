@@ -2,6 +2,9 @@ import {create} from "zustand"
 import { axiosInstance } from "../lib/AxiosInstance.js"
 import toast from "react-hot-toast"
 import {io} from "socket.io-client"
+
+const BASEURL = import.meta.env.MODE == "development" ? "http://localhost:3001" : "/";
+
 export const useAuthStore = create((set,get)=>({
     authUser : null,
     isSigningUp:false,
@@ -87,7 +90,7 @@ export const useAuthStore = create((set,get)=>({
         }
     
         // Initialize the socket connection
-        const newSocket = io("http://localhost:3001", {
+        const newSocket = io(BASEURL, {
             query: { userId: authUser._id },
             reconnection: true, // Enable automatic reconnection
             reconnectionAttempts: 5, // Set a max number of attempts
