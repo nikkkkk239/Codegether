@@ -6,6 +6,7 @@ import { io , getSocketId , userSocketMap} from "../lib/socket.js";
 export const getAllSessions = async(req,res)=>{
     try {
         const allSessions = await Session.find({});
+        console.log("Sessions : ",allSessions);
         return res.status(200).json(allSessions);
     } catch (error) {
         console.log("error in getAllSessions route :",error);

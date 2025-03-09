@@ -10,11 +10,13 @@ import { useAuthStore } from '../store/useAuthStore';
 
 function Home() {
   const {getSessions,sessions,isFetchingSessions,setSelectedSession,setSessionClicked,setChat,listenToSession,unListenToSession,listenToJoin,listenToSessionEnd,listenToSessionLeft} = useSessionStore();
-  const {socket} = useAuthStore()
+  const {socket , authUser} = useAuthStore()
   const {isModalOpen,setIsModalOpen,modalType} = useContext(modalContext)
-
-  useEffect(()=>{
+  useEffect(() => {
+    console.log("Fetching sessions...");
     getSessions();
+  }, [getSessions]);
+  useEffect(()=>{
     console.log("home page.")
     listenToSession();
     listenToJoin();
@@ -23,6 +25,7 @@ function Home() {
     setSelectedSession(null);
     setChat(null)
     setSessionClicked(null)
+
     return ()=>unListenToSession()
   },[getSessions,listenToSessionLeft,listenToSession,listenToSessionEnd,unListenToSession])
 
@@ -48,12 +51,14 @@ function Home() {
 
   };
 
+  console.log("serrsonpn : ",sessions);
+
   if(isFetchingSessions) return <div> Loading... </div>
 
   return (
     <div className='home' style={isModalOpen ? {position:"fixed",width:"100%"} :{}}>
 
-      {sessions && sessions.map((session , i)=>
+      {sessions.length != 0 && sessions?.map((session , i)=>
           (<SessionCard session={session} key={i}/>)
       )}
       <Modal 

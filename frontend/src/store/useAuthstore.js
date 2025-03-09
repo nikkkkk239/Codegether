@@ -4,6 +4,7 @@ import toast from "react-hot-toast"
 import {io} from "socket.io-client"
 
 const BASEURL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
+console.log("My env : - ",import.meta.env.VITE_REACT_APP_BACKEND_BASEURL)
 
 export const useAuthStore = create((set,get)=>({
     authUser : null,
@@ -88,7 +89,7 @@ export const useAuthStore = create((set,get)=>({
             socket.disconnect();
             socket.removeAllListeners(); // Remove previous listeners to prevent duplication
         }
-    
+    console.log("Base : -",BASEURL);
         // Initialize the socket connection
         const newSocket = io(BASEURL, {
             query: { userId: authUser._id },

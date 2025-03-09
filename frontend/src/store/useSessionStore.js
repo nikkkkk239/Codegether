@@ -13,7 +13,7 @@ export const useSessionStore = create(
     setCode:(val)=>{
         set({code : val})
     },
-    isFetchingSessions : false,
+    isFetchingSessions : true,
     isSessionCreating : false,
     isSessionJoining : false,
     selectedSession:null,
@@ -28,11 +28,10 @@ export const useSessionStore = create(
     },
     getSessions : async()=>{
         try {
-            set({isFetchingSessions:true})
             const response = await axiosInstance.get("/session/");
             set({sessions : response.data })
         }catch (error) { 
-            console.log("error in createSession : ",error);
+            console.log("error in getSessions : ",error);
             toast.error(error.reponse.data.message);
         }finally{
             set({isFetchingSessions : false})
