@@ -1,7 +1,7 @@
 import Chat from "../models/chat.model.js";
 import Session from "../models/session.model.js"
 import User from "../models/auth.model.js"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import { io , getSocketId , userSocketMap} from "../lib/socket.js";
 export const getAllSessions = async(req,res)=>{
     try {
