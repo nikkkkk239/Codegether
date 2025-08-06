@@ -1,8 +1,9 @@
 import toast from "react-hot-toast";
 import { create } from "zustand";
-import { useAuthStore } from "./useAuthStore";
+
 import { axiosInstance } from "../lib/AxiosInstance";
 import {persist} from "zustand/middleware"
+import { useAuthStore } from "./useAuthstore";
 export const useSessionStore = create(
     persist((set,get)=>({
     sessionClicked : null,
