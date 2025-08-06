@@ -1,5 +1,6 @@
 import React, { useEffect,useState } from 'react'
-import { useAuthStore } from '../store/useAuthStore'
+import { useAuthStore } from '../store/useAuthstore';
+
 
 function Message({message}) {
     const {getUser,authUser} = useAuthStore();

@@ -2,9 +2,10 @@ import React, { useContext } from 'react'
 import { IoPeopleSharp } from "react-icons/io5";
 import { FaCode } from "react-icons/fa";
 import { useSessionStore } from '../store/useSessionStore';
-import { useAuthStore } from '../store/useAuthStore';
+
 import { modalContext } from '../store/ModalContext';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../store/useAuthstore';
 function SessionCard({session}) {
   const {requestJoin,setSessionClicked,setSelectedSession} = useSessionStore();
   const {authUser} = useAuthStore();

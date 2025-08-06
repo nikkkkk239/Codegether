@@ -5,7 +5,8 @@ import toast from 'react-hot-toast';
 import { FaLaptopCode } from "react-icons/fa";
 import { LuEyeClosed } from "react-icons/lu";
 import Image from "../assets/vscode.jpg"
-import { useAuthStore } from '../store/useAuthStore.js';
+import { useAuthStore } from '../store/useAuthstore';
+
 
 function Login() {
   const {login,isLoggingIn} = useAuthStore();

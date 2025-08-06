@@ -5,7 +5,8 @@ import SessionCard from '../components/SessionCard';
 import { modalContext } from '../store/ModalContext';
 import HostModal from "../components/HostModal"
 import JoinModal from "../components/JoinModal"
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore } from '../store/useAuthstore';
+
 
 
 function Home() {
