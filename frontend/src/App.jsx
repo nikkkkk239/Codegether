@@ -8,8 +8,10 @@ import './App.css'
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import SessionPage from './pages/SessionPage.jsx'
-import { useAuthStore } from './store/useAuthStore.js'
+
 import { useSessionStore } from './store/useSessionStore.js'
+import { useAuthStore } from './store/useAuthstore.js'
+
 function App() {
   const {checkAuth,authUser} = useAuthStore();
   const [loading , setLoading] = useState(true)
