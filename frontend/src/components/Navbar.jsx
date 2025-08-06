@@ -17,9 +17,7 @@ function Navbar() {
   const handleLogout = ()=>{
     logout();
   }
-  const handleProfileClick = ()=>{
-    navigate('/profile')
-  }
+
   const openModal = () => {
     setIsModalOpen(true);
     setModalType("host")
@@ -32,19 +30,19 @@ function Navbar() {
       <div className='right'>
         {
           authUser && 
+          <div >
+            <p style={{display:"block"}}>{authUser.username}</p>
+          </div>
+        } 
+        {
+          authUser && 
           <div className='Host' onClick={openModal}>
             <TbWorldCode className='icon' />
             <p>Host</p>
           </div>
         }
          
-        {
-          authUser && 
-          <div className='profile' onClick={handleProfileClick}>
-            <RiUser6Fill className='icon' />
-            <p>Profile</p>
-          </div>
-        } 
+        
         {authUser && 
         <div className='logout' onClick={handleLogout}>
           <RiLogoutCircleRFill className='icon'/>
