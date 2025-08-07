@@ -3,7 +3,8 @@ import { create } from "zustand";
 
 import { axiosInstance } from "../lib/AxiosInstance";
 import {persist} from "zustand/middleware"
-import { useAuthStore } from "./useAuthstore";
+import { useAuthStore } from "./useAuthStore";
+
 export const useSessionStore = create(
     persist((set,get)=>({
     sessionClicked : null,

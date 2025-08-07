@@ -92,6 +92,8 @@ export const useAuthStore = create((set,get)=>({
     console.log("Base : -",BASEURL);
         // Initialize the socket connection
         const newSocket = io(BASEURL, {
+            withCredentials:true,
+            transports:['websocket'],
             query: { userId: authUser._id },
             reconnection: true, // Enable automatic reconnection
             reconnectionAttempts: 5, // Set a max number of attempts

@@ -5,13 +5,13 @@ import SessionCard from '../components/SessionCard';
 import { modalContext } from '../store/ModalContext';
 import HostModal from "../components/HostModal"
 import JoinModal from "../components/JoinModal"
-import { useAuthStore } from '../store/useAuthstore';
+
 
 
 
 function Home() {
   const {getSessions,sessions,isFetchingSessions,setSelectedSession,setSessionClicked,setChat,listenToSession,unListenToSession,listenToJoin,listenToSessionEnd,listenToSessionLeft} = useSessionStore();
-  const {socket , authUser} = useAuthStore()
+
   const {isModalOpen,setIsModalOpen,modalType} = useContext(modalContext)
   useEffect(() => {
     console.log("Fetching sessions...");

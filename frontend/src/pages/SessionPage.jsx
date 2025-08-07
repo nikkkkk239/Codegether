@@ -5,7 +5,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import Message from "../components/Message";
 import { BsSendFill } from "react-icons/bs";
 import MyEditor from "../components/MyEditor";
-import { useAuthStore } from "../store/useAuthstore";
+import { useAuthStore } from "../store/useAuthStore";
+
 
 const SessionPage = () => {
   const {id} = useParams();
