@@ -5,7 +5,7 @@ import { useSessionStore } from '../store/useSessionStore';
 
 import { modalContext } from '../store/ModalContext';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../store/useAuthstore';
+import { useAuthStore } from '../store/useAuthStore';
 function SessionCard({session}) {
   const {requestJoin,setSessionClicked,setSelectedSession} = useSessionStore();
   const {authUser} = useAuthStore();

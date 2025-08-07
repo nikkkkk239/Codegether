@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { useAuthStore } from '../store/useAuthstore.js';
+import { useAuthStore } from '../store/useAuthStore.js';
 
 import Modal from "react-modal"
 import { TbWorldCode } from "react-icons/tb";

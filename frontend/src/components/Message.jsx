@@ -1,5 +1,5 @@
 import React, { useEffect,useState } from 'react'
-import { useAuthStore } from '../store/useAuthstore';
+import { useAuthStore } from '../store/useAuthStore';
 
 
 function Message({message}) {
