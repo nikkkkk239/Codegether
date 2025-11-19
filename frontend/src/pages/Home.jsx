@@ -54,7 +54,11 @@ function Home() {
 
   console.log("serrsonpn : ",sessions);
 
-  if(isFetchingSessions) return <div> Loading... </div>
+  if(isFetchingSessions) return (
+    <div className="loader-overlay">
+      <div className="spinner" />
+    </div>
+  )
 
   return (
     <div className='home' style={isModalOpen ? {position:"fixed",width:"100%"} :{}}>

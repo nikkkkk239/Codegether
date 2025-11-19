@@ -399,6 +399,28 @@
     font-weight: 500;
 }
 
+/* Centered full-screen loading overlay */
+.loader-overlay{
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.75);
+    z-index: 2000;
+}
+.spinner{
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 6px solid rgba(0,0,0,0.12);
+    border-top-color: #7272FF;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin{
+    to { transform: rotate(360deg); }
+}
+
 /*session*/
 .sessionPage{
     display: flex;

@@ -26,7 +26,11 @@ function App() {
     fun();
   },[])
 
-  if(loading) return <div>Loading...</div>
+  if(loading) return (
+    <div className="loader-overlay">
+      <div className="spinner" />
+    </div>
+  )
   console.log("user : ",authUser)
   return (
     <>
