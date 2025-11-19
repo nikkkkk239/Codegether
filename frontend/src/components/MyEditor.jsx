@@ -1,4 +1,4 @@
-import React, { useEffect, useState ,useCallback} from 'react';
+import React, { useEffect, useState ,useCallback, useRef} from 'react';
 import  MonacoEditor  from '@monaco-editor/react';
 
 import { BiSolidRightArrow } from "react-icons/bi"
@@ -8,12 +8,15 @@ const MyEditor = () => {
     const {selectedSession,isRunning,onRun,code,changeCode,listenCodeChange} = useSessionStore();
     const [defaultValue,setDefaultValue] = useState("");
     const [output , setOutput ] = useState("");
+    // local editor content to avoid cursor jump on rapid remote/store updates
+    const [editorContent, setEditorContent] = useState("");
+    const editorRef = useRef(null);
 
     
     useEffect(()=>{
-        listenCodeChange();
-        console.log("Code from MyEditor",code)
-    },[listenCodeChange,code])
+      listenCodeChange();
+      console.log("Code from MyEditor",code)
+    },[listenCodeChange])
     
     useEffect(()=>{
         if(selectedSession.language == "javascript" ){
@@ -27,7 +30,30 @@ const MyEditor = () => {
         }else if(selectedSession.language == 'java'){
             setDefaultValue("// Start your code here...")
         }
-    },[])
+    },[selectedSession && selectedSession.language])
+
+    // initialize local editor content from store code or default value
+    useEffect(()=>{
+      const initial = code && code.length ? code : defaultValue;
+      setEditorContent(initial || "");
+    },[code, defaultValue])
+
+    // when remote/store code changes, update local editor only if editor is not focused
+    useEffect(()=>{
+      if (!editorRef.current) return;
+      const editorInstance = editorRef.current;
+      if (code !== editorContent) {
+        try {
+          const hasFocus = editorInstance.hasTextFocus && editorInstance.hasTextFocus();
+          if (!hasFocus) {
+            setEditorContent(code);
+          }
+        } catch (e) {
+          // fallback: update if not focused or error
+          setEditorContent(code);
+        }
+      }
+    },[code])
     
   // Debounce function
 function debounce(func, delay) {
@@ -41,9 +67,10 @@ function debounce(func, delay) {
   }
   
   const handleEditorChange = (changedValue, event) => {
-    console.log("Content changed:", changedValue);
-    // Call the debounced function and pass changedValue
-    debouncedSetValue(changedValue);
+    // update local editor immediately to keep cursor position stable
+    setEditorContent(changedValue || "");
+    // Call the debounced function and pass changedValue to sync to store
+    debouncedSetValue(changedValue || "");
   };
   
   // Create a debounced version of the function
@@ -72,6 +99,8 @@ function debounce(func, delay) {
   };
 
   const handleEditorDidMount = (editor, monaco) => {
+    // store editor instance for focus checks and advanced ops
+    editorRef.current = editor;
     monaco.editor.defineTheme('myCustomTheme', {
       base: 'vs-dark', // Can be 'vs', 'vs-dark', or 'hc-black'
       inherit: true, // Inherit default settings
@@ -123,8 +152,8 @@ function debounce(func, delay) {
             fontSize:"20",
             padding:{top:30,bottom:30},
           }}
-        defaultValue={code.length == 0 ? defaultValue :code}
-        value={code}
+        defaultValue={editorContent}
+        value={editorContent}
         onChange={handleEditorChange}
         onMount={handleEditorDidMount}
       />
