@@ -16,8 +16,8 @@ export const login = async (req,res)=>{
         if(!isPasswordCorrect){
             return res.status(400).json({message : "Incorrect password ."})
         }
-        generateToken(isUser._id,res);
-        return res.status(200).json(isUser);
+        const token = generateToken(isUser._id);
+        return res.status(200).json({ user: isUser, token });
     } catch (error) {
         console.log("Error in login route : ",error)
         return res.status(500).json({message:"Internal server error ."})
@@ -56,24 +56,23 @@ export const register = async(req,res)=>{
         if(!user){
             return res.status(500).json({message:"Internal server error."}) 
         }
-        generateToken(user._id,res);
-        return res.status(200).json(user);
+        const token = generateToken(user._id);
+        return res.status(200).json({ user, token });
     } catch (error) {
         console.log("Error in register route : ",error)
         return res.status(500).json({message:"Internal server error ."})
     }
 }
-export const logout = async (req,res)=>{
+export const logout = async (req, res) => {
     try {
-        res.cookie('token',"",{ httpOnly: true,secure: true,
-        sameSite: "None",
-        expires: new Date(0)})
-        return res.status(200).json({message:"Logged out successful ."})
+        // With bearer tokens we don't store session server-side by default.
+        // Logout is handled client-side by removing the token.
+        return res.status(200).json({ message: "Logged out successful ." });
     } catch (error) {
-        console.log("Error in logout route : ",error)
-        return res.status(500).json({message:"Internal server error ."})
+        console.log("Error in logout route : ", error);
+        return res.status(500).json({ message: "Internal server error ." });
     }
-}
+};
 export const checkAuth = async (req,res)=>{
     try {
         const user = req.user;

@@ -3,11 +3,13 @@ import jwt from "jsonwebtoken"
 
 export const protectedRoute = async(req,res,next)=>{
     try {
-        const token = req.cookies.token;
-        if(!token){
-            return res.status(401).json({message:"Unauthenticated user ."})
+        // Expect Authorization header: "Bearer <token>"
+        const authHeader = req.headers.authorization || req.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ message: "Unauthenticated user ." })
         }
-        const isVerified = jwt.verify(token,process.env.SECRET_KEY)
+        const token = authHeader.split(' ')[1];
+        const isVerified = jwt.verify(token, process.env.SECRET_KEY)
         if(!isVerified){
             return res.status(401).json({message:"Unauthenticated user ."})
         }

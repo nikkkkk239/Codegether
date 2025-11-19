@@ -7,7 +7,8 @@ const BASEURL = import.meta.env.VITE_REACT_APP_BACKEND_BASEURL;
 console.log("My env : - ",import.meta.env.VITE_REACT_APP_BACKEND_BASEURL)
 
 export const useAuthStore = create((set,get)=>({
-    authUser : null,
+    authUser : JSON.parse(localStorage.getItem('authUser')) || null,
+    token: localStorage.getItem('token') || null,
     isSigningUp:false,
     isLoggingIn:false,
     isUpdatingProfile : false,
@@ -20,7 +21,9 @@ export const useAuthStore = create((set,get)=>({
             set({isCheckingAuth : true})
             const response = await axiosInstance.get("/auth/checkAuth");
             console.log("checkAuth response : ",response.data);
-            set({authUser:response.data})
+            // response.data should be user object
+            set({authUser: response.data});
+            localStorage.setItem('authUser', JSON.stringify(response.data));
             get().connectSocket()
         } catch (error) {
             console.log('Error in checkAuth : ',error)
@@ -41,7 +44,11 @@ export const useAuthStore = create((set,get)=>({
         try {
             set({isSigningUp : true})
             const response = await axiosInstance.post("/auth/register",details)
-            set({authUser : response.data})
+            // response.data -> { user, token }
+            const { user, token } = response.data;
+            set({ authUser: user, token });
+            localStorage.setItem('authUser', JSON.stringify(user));
+            localStorage.setItem('token', token);
             toast.success(`Welcome ${details.username}.`)
             get().connectSocket();
         } catch (error) {
@@ -54,19 +61,25 @@ export const useAuthStore = create((set,get)=>({
     },
     logout:async()=>{
         try {
-            const response = await axiosInstance.post("/auth/logout");
-            set({authUser : null});
+            // Remove local token and user on client
+            localStorage.removeItem('token');
+            localStorage.removeItem('authUser');
+            set({ authUser: null, token: null });
             get().disconnectSocket();
         } catch (error) {
             console.log("Error occured in logout : ",error);
-            toast.error(error.response.data.message)
+            toast.error(error?.response?.data?.message || 'Logout failed')
         }
     },login:async(details)=>{
         try {
             set({isLoggingIn : true});
             const response = await axiosInstance.post("/auth/login",details);
             console.log(response.data)
-            set({ authUser: response.data });
+            // response.data -> { user, token }
+            const { user, token } = response.data;
+            set({ authUser: user, token });
+            localStorage.setItem('authUser', JSON.stringify(user));
+            localStorage.setItem('token', token);
             toast.success(`Successfully logged in .`)
             get().connectSocket()
         } catch (error) {
@@ -125,11 +138,15 @@ export const useAuthStore = create((set,get)=>({
     },
     
     disconnectSocket : ()=>{
-        if(get().socket?.connected) {
-            get().socket?.disconnect()
-            socket.removeAllListeners();
-            set({ isSocketConnected: false })
-
+        const socket = get().socket;
+        if (socket?.connected) {
+            socket.disconnect();
+            try {
+                socket.removeAllListeners();
+            } catch (e) {
+                // ignore if already removed
+            }
+            set({ isSocketConnected: false, socket: null });
         }
     }
 }))
